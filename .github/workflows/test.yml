@@ -1,0 +1,28 @@
+on:
+  - push
+  - pull_request
+
+jobs:
+  test-lychee-parser-action-with-params:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    name: Test the lychee log action with params
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Test links
+        uses: 3mdeb/lychee-log-action@main
+        with:
+          tested_path: 'BROKEN.md'
+          lychee_args: '-t 10 --max-redirects 10 -a 403,406,429,500,502,503,522,999 --format json'
+          parser_args: '404..407 409..417 421..428 431 451 -t -n'
+
+  test-lychee-parser-action-default:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    name: Test the lychee log action with defaults
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Test links
+        uses: 3mdeb/lychee-log-action@main

@@ -1,0 +1,40 @@
+name: 'Lychee Log Action'
+description: >
+  Tool used to analyze Lychee link checker logs. Evaluates whether the problems
+  detected by lychee are actual site or server problems.
+inputs:
+  tested_path:
+    description: 'The path in which non-working links will be tested'
+    required: true
+    default: '.'
+  lychee_args:
+    description: |
+      'Arguments passed to the Lychee link checker (check documentation)'
+    required: true
+    default: '--timeout 60 --max-redirects 10 -a 403,406,429,500,502,503,522,999'
+  parser_args:
+    description: |
+      'Arguments passed to the Lychee Log parser (check documentation)'
+    required: true
+    default: '404..407 409..417 421..428 431 451 -t -n'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Link Checker
+      id: lychee
+      uses: lycheeverse/lychee-action@v1.9.3
+      with:
+        args: '${{ inputs.lychee_args }} ${{ inputs.tested_path }}'
+        output: 'log.json'
+        format: json
+        fail: false
+    - name: Checkout SEO Spy
+      uses: actions/checkout@v4.1.1
+      with:
+        repository: 3mdeb/lychee-log-parser
+        path: lychee-log-parser
+    - name: Parsing Lychee Log
+      run: |
+        lychee-log-parser/src/lychee_log_parser.py ${{ inputs.parser_args }} || { cat github_job_summary.md > "${GITHUB_STEP_SUMMARY}"; exit 1; }
+      shell: bash
