@@ -14,7 +14,7 @@ jobs:
         uses: 3mdeb/lychee-log-action@main
         with:
           tested_path: 'BROKEN.md'
-          lychee_args: '-t 10 --max-redirects 10 -a 403,406,429,500,502,503,522,999 --format json'
+          lychee_args: '-t 10 --suggest --max-redirects 20 -a 403,406,429,500,502,503,522,999 --format json'
           parser_args: '404..407 409..417 421..428 431 451 -t -n'
 
   test-lychee-parser-action-default:

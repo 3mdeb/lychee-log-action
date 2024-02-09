@@ -11,7 +11,7 @@ inputs:
     description: |
       'Arguments passed to the Lychee link checker (check documentation)'
     required: true
-    default: '--timeout 60 --max-redirects 10 -a 403,406,429,500,502,503,522,999'
+    default: '--timeout 60 --suggest --max-redirects 20 -a 403,406,429,500,502,503,522,999'
   parser_args:
     description: |
       'Arguments passed to the Lychee Log parser (check documentation)'
